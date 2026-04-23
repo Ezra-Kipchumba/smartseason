@@ -15,6 +15,18 @@ const userRoutes  = require('./routes/userRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const { migrate } = require('./utils/migrate');
+const { seed } = require('./utils/seed');
+
+(async () => {
+  if (process.env.RUN_MIGRATIONS === 'true') {
+    console.log('🚀 Running remote migrations...');
+    await migrate();
+    await seed();
+    console.log('✅ Done. Disable RUN_MIGRATIONS now.');
+  }
+})();
+
 // ── Global Middleware ─────────────────────────────────────────────────────────
 
 // CORS — allow requests from the React frontend

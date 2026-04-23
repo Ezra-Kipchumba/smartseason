@@ -153,4 +153,4 @@ function generateNote(oldStage, newStage) {
   return `Transition: ${oldStage} → ${newStage}. Conditions monitored.`;
 }
 
-seed();
+module.exports = { seed };

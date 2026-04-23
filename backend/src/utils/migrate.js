@@ -87,4 +87,4 @@ async function migrate() {
   }
 }
 
-migrate();
+module.exports = { migrate };

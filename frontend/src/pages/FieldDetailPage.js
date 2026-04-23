@@ -34,8 +34,7 @@ export default function FieldDetailPage() {
       .finally(() => setLoading(false));
   }, [id, navigate]);
 
-  useEffect(() => { fetchField(); }, [fetchField]);
-  useEffect(() => {
+useEffect(() => {
   const fetchWeather = async () => {
     if (!field?.latitude || !field?.longitude) return;
 
@@ -50,8 +49,8 @@ export default function FieldDetailPage() {
     }
   };
 
-    fetchWeather();
-  }, [field?.id]);
+  fetchWeather();
+ }, [field?.id, field?.latitude, field?.longitude]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();

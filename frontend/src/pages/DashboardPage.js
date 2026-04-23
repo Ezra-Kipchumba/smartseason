@@ -7,7 +7,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LoadingCenter, StatusBadge, StageBadge } from '../components/common';
+import { LoadingCenter, StageBadge } from '../components/common';
 import api from '../utils/api';
 import MapView from '../components/MapView';
 import { formatDistanceToNow } from 'date-fns';

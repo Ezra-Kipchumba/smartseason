@@ -91,14 +91,7 @@ export default function FieldFormModal({ field, onClose, onSaved }) {
   };
 
   // Handling map clicks to update latitude and longitude
-     const handleMapSelect = ({ lat, lng, locationName }) => {
-     setForm(f => ({
-       ...f,
-       latitude: lat,
-       longitude: lng,
-       location: locationName || f.location
-     }));
-   };
+ 
 
   return (
     <Modal

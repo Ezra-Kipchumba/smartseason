@@ -201,14 +201,11 @@ sudo -u postgres psql -c "CREATE USER smartuser WITH PASSWORD 'yourpassword';"
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE smartseason TO smartuser;"
 ```
 
-**Alternative (skip local Postgres):** Use [Supabase](https://supabase.com) free tier — create a project, copy the connection string, skip local Postgres entirely.
-
----
 
 ### STEP 4 — Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/smartseason.git
+git clone https://github.com/Ezra-Kipchumba/smartseason.git
 cd smartseason
 ```
 
@@ -341,12 +338,12 @@ Map defaults to Nairobi coordinates
 ## Deployment Guide
 
 We deploy in three parts:
-1. **Database** → Supabase (free managed PostgreSQL)
+1. **Database** → Render (free managed PostgreSQL)
 2. **Backend** → Render (free Node.js hosting)
 3. **Frontend** → Vercel (free React hosting, fastest CDN globally)
 
 **Why this stack?**
-- Supabase: Managed Postgres with a generous free tier; no DevOps overhead
+- Render: Managed Postgres with a generous free tier;
 - Render: Free tier for web services; auto-deploys from GitHub on push
 - Vercel: Purpose-built for frontend SPAs; global edge network; instant deploys
 
@@ -367,19 +364,16 @@ Create the repo at https://github.com/new if you haven't already.
 
 ---
 
-### DEPLOY STEP 2 — Create a Free PostgreSQL Database on Supabase
+### DEPLOY STEP 2 — Create a Free PostgreSQL Database on Render - Postgres
 
-1. Go to https://supabase.com → **Start your project** → Sign in with GitHub
-2. Click **New Project**, choose a name (`smartseason`), set a strong DB password, pick a region close to Kenya (e.g. Frankfurt or Singapore)
+1. Go to https://render.com → **Start your project** → Sign in with GitHub
+2. Click **New Project**, choose a name (`smartseason-db`), set a strong DB password, pick a region close to Kenya (e.g. Frankfurt or Singapore)
 3. Wait ~2 minutes for provisioning
-4. Go to **Project Settings → Database → Connection string** (URI format)
-5. Copy the URI — it looks like:
+4. Copy the URI — it looks like:
    ```
-   postgresql://postgres:[PASSWORD]@db.xxxx.supabase.co:5432/postgres
+   postgresql://smartseason_db_...
    ```
-6. Keep this for the next step
-
-**Why Supabase over Heroku Postgres?** Heroku removed its free tier. Supabase's free tier gives you 500 MB and never sleeps.
+5. Keep this for the next step
 
 ---
 
@@ -400,17 +394,17 @@ Create the repo at https://github.com/new if you haven't already.
    JWT_SECRET      = [your generated secret]
    JWT_EXPIRES_IN  = 7d
    NODE_ENV        = production
-   CLIENT_URL      = https://your-frontend.vercel.app   (update after step 4)
+   CLIENT_URL      = https://smartseason-sable.vercel.app 
    ```
 6. Click **Create Web Service**
 
-Wait ~3 minutes. Render will build and deploy. You'll get a URL like `https://smartseason-api.onrender.com`.
+Wait ~3 minutes. Render will build and deploy. You'll get a URL like `https://smartseason-yoka.onrender.com`.
 
 **Run migrations on the live DB (one time only):**
 ```bash
-# From your local machine, pointing at the Supabase DB:
-DATABASE_URL="your_supabase_url" node src/utils/migrate.js
-DATABASE_URL="your_supabase_url" node src/utils/seed.js
+# From your local machine, pointing at the Render postgres DB:
+DATABASE_URL="postgresql://smartseason_db_u54l_user:4IWUjgchUNHbnTJELJQM3cdp99Wm0FtE@dpg-d7l5cam47okc73b73s9g-a/smartseason_db_u54l" node src/utils/migrate.js
+DATABASE_URL="postgresql://smartseason_db_u54l_user:4IWUjgchUNHbnTJELJQM3cdp99Wm0FtE@dpg-d7l5cam47okc73b73s9g-a/smartseason_db_u54l" node src/utils/seed.js
 ```
 
 Or use Render's **Shell** tab to run these commands directly.
@@ -431,11 +425,11 @@ Or use Render's **Shell** tab to run these commands directly.
    - **Output Directory:** `build`
 5. Add **Environment Variables**:
    ```
-   REACT_APP_API_URL = https://smartseason-api.onrender.com
+   REACT_APP_API_URL=https://smartseason-yoka.onrender.com
    ```
 6. Click **Deploy**
 
-In ~2 minutes you'll get a live URL like `https://smartseason.vercel.app`.
+In ~2 minutes you'll get a live URL like `https://smartseason-sable.vercel.app/`.
 
 **Final step:** Go back to Render → your backend service → Environment → update `CLIENT_URL` to your Vercel URL → click **Save** (triggers a redeploy).
 
@@ -447,9 +441,9 @@ In ~2 minutes you'll get a live URL like `https://smartseason.vercel.app`.
 
 | Component | URL |
 |-----------|-----|
-| Frontend  | `https://smartseason.vercel.app` |
-| Backend   | `https://smartseason-api.onrender.com` |
-| Health    | `https://smartseason-api.onrender.com/api/health` |
+| Frontend  | `https://smartseason-sable.vercel.app/` |
+| Backend   | `https://smartseason-yoka.onrender.com` |
+| Health    | `https://smartseason-yoka.onrender.com/api/health` |
 
 ---
 
@@ -480,6 +474,7 @@ All endpoints are prefixed with `/api`.
 | GET    | `/fields`              | Any    | List fields (filtered by role) |
 | GET    | `/fields/stats`        | Any    | Dashboard stats |
 | GET    | `/fields/:id`          | Any    | Field detail + history |
+| GET    | `/fields/:id/weather`  | Any    | weather + smart insights for a field |
 | POST   | `/fields`              | Admin  | Create field |
 | PUT    | `/fields/:id`          | Admin  | Update field |
 | DELETE | `/fields/:id`          | Admin  | Delete field |

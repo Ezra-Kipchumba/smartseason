@@ -1,23 +1,28 @@
 /**
  * db.js
- * Exports a shared PostgreSQL connection pool.
- * Using a pool (not single connection) is best practice for web apps —
- * it reuses connections, handles concurrency, and auto-reconnects.
+ * PostgreSQL connection pool (Render-ready with SSL support)
  */
 
 const { Pool } = require('pg');
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  // Keep pool small; fine for a moderate-traffic app
+
+  // ✅ Required for Render / hosted Postgres
+  ssl: isProduction
+    ? { rejectUnauthorized: false }
+    : false,
+
   max: 10,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis: 5000, // slightly higher for cloud DB
 });
 
-// Log when a new client connects (helpful during development)
+// Log when a new client connects (dev only)
 pool.on('connect', () => {
-  if (process.env.NODE_ENV === 'development') {
+  if (!isProduction) {
     console.log('📦 New DB client connected');
     console.log('🚨 CONNECTING TO DB:', process.env.DATABASE_URL);
   }

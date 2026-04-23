@@ -36,7 +36,18 @@ app.use('/api/users',  userRoutes);
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
-
+app.get('/', (_req, res) => {
+  res.json({
+    name: 'SmartSeason API',
+    status: 'running',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth/login',
+      fields: '/api/fields'
+    }
+  });
+});
 // 404 fallback for unknown API routes
 app.use('*', (_req, res) => {
   res.status(404).json({ message: 'Route not found.' });

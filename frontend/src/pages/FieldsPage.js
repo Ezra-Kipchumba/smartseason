@@ -14,8 +14,21 @@ import FieldFormModal from '../components/fields/FieldFormModal';
 import api from '../utils/api';
 import { format } from 'date-fns';
 
-const CROP_OPTIONS     = ['Maize', 'Beans', 'Wheat', 'Sorghum', 'Sunflower'];
-const LOCATION_OPTIONS = ['Kiambu', 'Thika', 'Ruiru', 'Limuru', 'Naivasha'];
+const CROP_OPTIONS = [
+  'Avocados', 'Bananas', 'Beans','Cabbage', 'Carrots','Citrus Fruits',
+  'Coffee', 'Flowers', 'Maize', 'Mangoes', 'Onions', 'Pineapples', 
+  'Potatoes', 'Sisal', 'Sorghum', 'Sunflower', 'Sugarcane', 'Sweet Potatoes',
+  'Tea', 'Tomatoes','Wheat'
+];
+const LOCATION_OPTIONS = [
+  'Baringo','Bomet','Bungoma','Busia','Elgeyo-Marakwet','Embu','Garissa',
+  'Homa Bay','Isiolo','Kajiado','Kakamega','Kericho','Kiambu','Kilifi',
+  'Kirinyaga','Kisii','Kisumu','Kitui','Kwale','Laikipia','Lamu','Machakos',
+  'Makueni','Mandera','Marsabit','Meru','Migori','Mombasa','Murang’a',
+  'Nairobi','Nakuru','Nandi','Narok','Nyamira','Nyandarua','Nyeri',
+  'Samburu','Siaya','Taita-Taveta','Tana River','Tharaka-Nithi',
+  'Trans Nzoia','Turkana','Uasin Gishu','Vihiga','Wajir','West Pokot'
+];
 const STAGE_OPTIONS    = ['planted', 'growing', 'ready', 'harvested'];
 
 export default function FieldsPage() {

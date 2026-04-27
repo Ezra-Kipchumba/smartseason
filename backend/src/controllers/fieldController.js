@@ -27,25 +27,46 @@ function withStatus(fields) {
 async function getFields(req, res) {
   try {
     const { role, id } = req.user;
+    const { crop, location, stage } = req.query;
 
-    const baseQuery = `
+    let query = `
       SELECT
         f.*,
         u.name  AS agent_name,
         u.email AS agent_email
       FROM fields f
       LEFT JOIN users u ON u.id = f.assigned_to
+      WHERE 1=1
     `;
 
-    let result;
-    if (role === 'admin') {
-      result = await pool.query(baseQuery + ' ORDER BY f.created_at DESC');
-    } else {
-      result = await pool.query(
-        baseQuery + ' WHERE f.assigned_to = $1 ORDER BY f.created_at DESC',
-        [id]
-      );
+    const params = [];
+    let idx = 1;
+
+    // 🔐 Role restriction
+    if (role !== 'admin') {
+      query += ` AND f.assigned_to = $${idx++}`;
+      params.push(id);
     }
+
+    // 🎯 Filters (only apply if present)
+    if (crop) {
+      query += ` AND f.crop_type = $${idx++}`;
+      params.push(crop);
+    }
+
+    if (location) {
+      query += ` AND f.location = $${idx++}`;
+      params.push(location);
+    }
+
+    if (stage) {
+      query += ` AND f.stage = $${idx++}`;
+      params.push(stage);
+    }
+
+    query += ` ORDER BY f.created_at DESC`;
+
+    const result = await pool.query(query, params);
 
     res.json(withStatus(result.rows));
   } catch (err) {
